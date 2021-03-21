@@ -1,0 +1,113 @@
+
+.header-navigation, #logo, .header-wrapper {
+	border: 1px solid black;
+}
+
+h2 {
+	text-align: center;
+}
+
+.header {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-left: 5em;
+}
+
+.header-navigation {
+	position: relative;
+	margin: auto;
+}
+
+.header-navigation ul {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 20em;
+}
+
+li {
+	list-style: none;
+	padding-left: 20px;
+	width: 120px;
+}
+
+/*
+Best Movie
+*/
+#best-imdb-score {
+	display: flex;
+	justify-content: center;
+	margin: auto;
+}
+
+.movie-presentation {
+	flex-direction: column;
+}
+
+/*
+Carousel
+*/
+.carousel {
+	position: relative;
+	overflow: hidden;
+}
+
+.carousel__container {
+	transition: transform 0.3s;
+	transform: translate3d(0, 0, 0);
+}
+.carousel__container::after {
+	content: '';
+	clear: both;
+	display: table;
+}
+
+.carousel__item {
+	float: left;
+	transition: transform 0.3s;
+	text-align: center;
+}
+
+article {
+	position: relative;
+	margin: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+figure {
+	background-color: rgba(0, 0, 0, 0.2);
+	width: 90%;
+	height: 100%;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.carousel__item:hover {
+	transform: scale(1.1);
+	cursor: pointer;
+}
+
+.carousel__next, .carousel__prev {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	background: rgba(255, 255, 255, 0.7) url(../images/arrowright.svg) center center no-repeat;
+	background-size: 30px 30px;
+	border-radius: 50px;
+	top: 50%;
+	margin-top: -20px;
+	right: 10px;
+	cursor: pointer;
+	transition: transform 0.3s;
+}
+
+.carousel__next:hover, .carousel__prev:hover {
+	transform: scale(1.2);
+}
+
+.carousel__prev {
+	background-image: url(../images/arrowleft.svg);
+	right: auto;
+	left: 10px;
+}

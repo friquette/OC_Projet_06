@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+    	<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<title>JustStreamIt</title>
+    	<link rel="stylesheet" type="text/css" href="css/style.css">
+    	<script type="text/javascript" src="js/app.js"></script>
+	</head>
+	<body>
+		<div class=header-wrapper>
+			<header class="header" role="banner">
+				<a aria-label="JustStreamIt" href="index.html" id="logo">
+					<img src="images/logo.png" alt="JustStreamIt logo" aria-describedby="titre description" />
+					<title id="titre">JustStreamIt</title>
+				</a>
+
+				<nav role="navigation" class="header-navigation" aria-label="main navigation">
+					<ul>
+						<li class="header-navigation-item">
+							<a href="index.html">Accueil</a>
+						</li>
+						<li class="header-navigation-item">
+							<a href="categories.html">Catégories</a>
+						</li>
+					</ul>
+				</nav>
+			</header>
+		</div>
+
+		<main class="content">
+			<section>
+				<article id="best-imdb-score">
+					<div class="movie-presentation">
+						<h1 id="best-imdb-title"></h1>
+						<p id="best-imdb-description"></p>
+						<button id="play-button">Détails</button>
+					</div> 
+					<img src="" alt="Image du film" id="best-imdb-image"/>
+				</article>
+
+				<section class="carousel-wrapper">
+					<article class="container">
+						<h2>Films les mieux notés</h2>
+						<div id="best-score-carousel"></div>
+					</article>
+
+					<article class="container">
+						<h2>Action</h2>
+						<div id="action-movies"></div>
+					</article>
+
+					<article class="container">
+						<h2>Animation</h2>
+						<div id="animation-movies"></div>
+					</article>
+				</section>
+			</section>
+		</main>
+	</body>
+</html>

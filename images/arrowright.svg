@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g class="layer">
+  <title>Layer 1</title>
+  <g class="180" id="layer1" transform="rotate(180 256 256)">
+   <path d="m320.14876,72.717737l-183.28162,183.28165l183.28162,183.28291l54.9841,-54.98539l-128.29752,-128.29752l128.29752,-128.29622l-54.9841,-54.98543z" fill="#222222" id="path3766-1" stroke="#222222" stroke-linejoin="round" stroke-miterlimit="4" stroke-width="38.880001"/>
+  </g>
+ </g>
+</svg>
