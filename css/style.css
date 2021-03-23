@@ -1,3 +1,15 @@
+body, html {
+	margin: 0;
+	padding: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+*:focus {
+	box-shadow: 0 0 10px blue;
+}
 
 .header-navigation, #logo, .header-wrapper {
 	border: 1px solid black;
@@ -110,4 +122,32 @@ figure {
 	background-image: url(../images/arrowleft.svg);
 	right: auto;
 	left: 10px;
+}
+
+/*
+Modal
+*/
+.modal {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-wrapper {
+	overflow: auto;
+	width: 600px;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh - 20px);
+	padding: 20px;
+	background-color: #fff;
+}
+
+.hidden {
+	display: none;
 }
