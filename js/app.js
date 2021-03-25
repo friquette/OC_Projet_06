@@ -33,7 +33,7 @@ async function loadBestImdbScoreMovies(url, filter, divParent) {
 	new Carousel(divParent, {
 		slidesToScroll: 1,
 		slidesVisible: 4,
-		infinite: true
+		loop: false
 	});
 }
 
@@ -69,7 +69,8 @@ async function loadSevenFirstMovies(movieList, divParent) {
 
 	new Carousel(divParent, {
 		slidesToScroll: 1,
-		slidesVisible: 4
+		slidesVisible: 4,
+		loop: false
 	});
 }
 

@@ -1,73 +1,60 @@
 class Carousel {
 	/*
-	* @param {HTMLElement} element
+	* @callback moveCallbacks
+	* @param {number} index
+	*/
+
+	/*
+	* @param {HTLMElement} element
 	* @param {Object} options
-	* @param {Object} options.slidesToScroll - Nombre d'éléments à faire défiler
-	* @param {Object} options.slidesVisible - Nombre d'éléments visibles dans un slide
-	* @param {boolean} options.infinite
-	*/ 
+	* @param {Object} [options.slidesToScroll=1] - number of element to scroll
+	* @param {Object} [options.slidesVisible=1] - number of element visible in one slide
+	* @param {boolean} [options.loop=false] - Do we have a loop at the end of the carousel?
+	*/
 	constructor(element, options = {}) {
 		this.element = element;
 		this.options = Object.assign({}, {
 			slidesToScroll: 1,
-			slidesVisible: 4,
-			infinite: true
+			slidesVisible: 1,
+			loop: false
 		}, options);
 
 		let children = [].slice.call(element.children);
 		this.isMobile = false;
-		this.currentItem = 0;
-
-		// Modification du DOM
+		this.currentItem = 0;	
+		this.moveCallbacks = [];	
+		
+		//DOM modification
 		this.root = this.createDivWithClass('carousel');
-		this.root.setAttribute('tabindex', '0');
 		this.container = this.createDivWithClass('carousel__container');
+		this.root.setAttribute('tabindex', '0');
 		this.root.appendChild(this.container);
 		this.element.appendChild(this.root);
 		this.items = children.map((child) => {
 			let item = this.createDivWithClass('carousel__item');
 			item.appendChild(child);
+			this.container.appendChild(item);
 			return item;
 		});
-		if(this.options.infinite) {
-			this.offset = this.options.slidesVisible * 2 - 1;
-			this.items = [
-				...this.items.slice(this.items.lenght - this.offset).map(item => item.cloneNode(true)),
-				...this.items,
-				...this.items.slice(0, this.offset).map(item => item.cloneNode(true))
-			];
-			this.goToItem(this.offset, false);
-		}
 
-		this.items.forEach(item => this.container.appendChild(item));
 		this.setStyle();
 		this.createNavigation();
 
-		
-
-		// Evenements
+		//Events
+		this.moveCallbacks.forEach(cb => cb(0));
 		this.onWindowResize();
 		window.addEventListener('resize', this.onWindowResize.bind(this));
 		this.root.addEventListener('keyup', (e) => {
-			if(e.key === 'ArrowRight') {
+			if(e.key === 'ArrowRight' || e.key === 'Right') {
 				this.next();
-			} else if(e.key === 'ArrowLeft') {
+			} else if(e.key === 'ArrowLeft' || e.key === 'Left') {
 				this.prev();
 			}
-		})
-		if(this.options.infinite) {
-			this.container.addEventListener('transitionend', this.resetInfinite.bind(this));
-		}
-	}
-
-	createDivWithClass (className) {
-		let div = document.createElement('div');
-		div.setAttribute('class', className);
-		return div;
+		});
 	}
 
 	/*
-	* Applique les bonnes dimensions aux éléments du carousel
+	* Set the right dimensions to the carousel elements
 	*/
 	setStyle() {
 		let ratio = this.items.length / this.slidesVisible;
@@ -78,11 +65,26 @@ class Carousel {
 	createNavigation() {
 		let nextButton = this.createDivWithClass('carousel__next');
 		let prevButton = this.createDivWithClass('carousel__prev');
+
 		this.root.appendChild(nextButton);
 		this.root.appendChild(prevButton);
 
 		nextButton.addEventListener('click', this.next.bind(this));
 		prevButton.addEventListener('click', this.prev.bind(this));
+
+		if(this.options.loop === true) return;
+		this.onMove(index => {
+			if(index === 0) {
+				prevButton.classList.add('carousel__prev-hidden');
+			} else {
+				prevButton.classList.remove('carousel__prev-hidden');
+			}
+			if(this.items[this.currentItem + this.slidesVisible] === undefined) {
+				nextButton.classList.add('carousel__next-hidden');
+			} else {
+				nextButton.classList.remove('carousel__next-hidden');
+			}
+		})
 	}
 
 	next() {
@@ -94,58 +96,62 @@ class Carousel {
 	}
 
 	/*
-	* Déplace le carousel vers l'élément ciblé
-	* @param {number} index
+	* @param {number} Move the carousel to the targeted element
 	*/
-	goToItem(index, animation = true) {
-		if (index < 0) {
-			index = this.items.length - this.options.slidesVisible;
-		} else if (index >= this.items.length || (this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem)) {
-			index = 0;
+	goToItem(index) {
+		if(index < 0) {
+			if(this.options.loop) {
+				index = this.items.length - this.slidesVisible;
+			} else {
+				return;
+			}
+			
+		} else if(index >= this.items.length || (this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem)) {
+			if(this.options.loop) {
+				index = 0;
+			} else {
+				return;
+			}
+			
 		}
-		let translateX = index * -100 / this.items.length;
-		if(animation === false){
-			this.container.style.transition = 'none';
-		}
+		let translateX = index * -100 / this.items.length
 		this.container.style.transform = 'translate3d(' + translateX + '%, 0, 0)';
-		this.container.offsetHeight; //force le repaint
-		if(animation === false) {
-			this.container.style.transition = '';
-		}
 		this.currentItem = index;
+		this.moveCallbacks.forEach(cb => cb(index));
 	}
 
 	/*
-	* Déplace le container pour donner l'impression d'un slide infini
+	* @param {moveCallbacks} callback
 	*/
-	resetInfinite() {
-		if(this.currentItem <= this.options.slidesToScroll) {
-			this.goToItem(this.currentItem + (this.items.length - 2 * this.offset), false);
-		} else if(this.currentItem >= this.items.length - this.offset) {
-			this.goToItem(this.currentItem - (this.items.length - 2 * this.offset), false);
-		}
+	onMove(callback) {
+		this.moveCallbacks.push(callback);
 	}
 
 	onWindowResize() {
-		let mobile = window.innerWidth < 800;
+		let mobile = window.innerWidth < 900;
 
 		if(mobile !== this.isMobile) {
 			this.isMobile = mobile;
 			this.setStyle();
+			this.moveCallbacks.forEach(cb => cb(this.currentItem));
 		}
 	}
 
 	/*
-	* @returns {number} 
+	* @param {string} className
+	* @returns {HTMLElement}
 	*/
-	get slidesToScroll() {
+	createDivWithClass(className) {
+		let div = document.createElement('div');
+		div.setAttribute('class', className);
+		return div;
+	}
+
+	get slidesToScroll(){
 		return this.isMobile ? 1 : this.options.slidesToScroll;
 	}
 
-	/*
-	* @returns {number} 
-	*/
-	get slidesVisible() {
+	get slidesVisible(){
 		return this.isMobile ? 1 : this.options.slidesVisible;
 	}
 }
