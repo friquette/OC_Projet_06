@@ -5,16 +5,15 @@
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     	<title>JustStreamIt</title>
     	<link rel="stylesheet" type="text/css" href="css/style.css">
-    	<script type="text/javascript" src="js/app.js"></script>
-    	<script type="text/javascript" src="js/carousel.js"></script>
-    	<script type="text/javascript" src="js/modal.js"></script>
+    	<script src="js/app.js"></script>
+    	<script src="js/carousel.js"></script>
+    	<script src="js/modal.js"></script>
 	</head>
 	<body>
 		<div class=header-wrapper>
-			<header class="header" role="banner">
+			<header class="header">
 				<a aria-label="JustStreamIt" href="index.html" id="logo">
-					<img src="images/logo.png" alt="JustStreamIt logo" aria-describedby="titre description" />
-					<title id="titre">JustStreamIt</title>
+					<img src="images/logo.png" alt="JustStreamIt logo" />
 				</a>
 
 				<nav role="navigation" class="header-navigation" aria-label="main navigation">
@@ -23,7 +22,7 @@
 							<a href="index.html">Accueil</a>
 						</li>
 						<li class="header-navigation-item">
-							<a href="categories.html">Catégories</a>
+							<a href="index.html">Catégories</a>
 						</li>
 					</ul>
 				</nav>
@@ -67,9 +66,9 @@
 
 		<aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
 			<div class="modal-wrapper stop-propagation">
-				<button class="close-modal" id="close-modal">Fermer</button>
 				<div id="movie-information"></div>
 				<img alt="image du film" id="movie-picture" />
+				<button class="close-modal" id="close-modal" aria-label="Fermer">X</button>
 			</div>
 		</aside>
 	</body>
