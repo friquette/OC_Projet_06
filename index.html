@@ -35,9 +35,9 @@
 					<div class="movie-presentation">
 						<h1 id="best-imdb-title"></h1>
 						<p id="best-imdb-description"></p>
-						<button id="detail-button" href="#modal" class="open-modal">Détails</button>
+						<a id="detail-button" class="open-modal" href="#modal">Détails</a>
 					</div> 
-					<img src="" alt="Image du film" id="best-imdb-image"/>
+					<img src="#" alt="Image du film" id="best-imdb-image"/>
 				</article>
 
 				<section class="carousel-wrapper">
@@ -64,12 +64,12 @@
 			</section>
 		</main>
 
-		<aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="title-modal" style="display: none;">
+		<div id="modal" class="modal" aria-hidden="true" role="dialog">
 			<div class="modal-wrapper stop-propagation">
 				<div id="movie-information"></div>
-				<img alt="image du film" id="movie-picture" />
+				<img alt="image du film" id="movie-picture" src="#"/>
 				<button class="close-modal" id="close-modal" aria-label="Fermer">X</button>
 			</div>
-		</aside>
+		</div>
 	</body>
 </html>
