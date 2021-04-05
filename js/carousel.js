@@ -62,6 +62,9 @@ class Carousel {
 		this.items.forEach(item => item.style.width = ((100 / this.slidesVisible) / ratio) + '%');
 	}
 
+	/*
+	* Creates the navigation buttons
+	*/
 	createNavigation() {
 		let nextButton = this.createDivWithClass('carousel__next');
 		let prevButton = this.createDivWithClass('carousel__prev');

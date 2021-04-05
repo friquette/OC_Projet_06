@@ -1,4 +1,9 @@
 class Modal {
+
+	/*
+	* @param {HTLMElement} element
+	* @param {string} url - url of the movie we want to display
+	*/
 	constructor(element, url) {
 		this.element = element;
 		this.url = url;
@@ -17,13 +22,15 @@ class Modal {
 		});
 	}
 
+	/*
+	* @param {Event} e - current event
+	*/
 	openModal(e) {
 		e.preventDefault();
 
 		this.modal = document.querySelector(this.element.getAttribute('href'));
 		this.previouslyFocusedElement = document.querySelector(':focus');
 		this.modal.style.display = "flex";
-		this.modal.querySelector("button").focus();
 		this.modal.removeAttribute('aria-hidden');
 		this.modal.setAttribute('aria-modal', 'true');
 
@@ -32,11 +39,16 @@ class Modal {
 		this.modal.addEventListener('click', this.closeModal.bind(this));
 		this.modal.querySelector('.close-modal').addEventListener('click', this.closeModal.bind(this));
 		this.modal.querySelector('.stop-propagation').addEventListener('click', this.stopPropagation.bind(this));
+		
 	}
 
+	/*
+	* @param {Event} e - current event
+	*/
 	closeModal(e) {
 		if(this.modal === null) return;
 		e.preventDefault();
+
 		this.modal.style.display = 'none';
 		if(this.previouslyFocusedElement !== null) this.previouslyFocusedElement.focus();
 		this.modal.setAttribute('aria-hidden', 'true');
@@ -54,6 +66,9 @@ class Modal {
 		e.stopPropagation();
 	}
 
+	/*
+	* Async function - creates all HTMLElements and add them into the modal to display movies information
+	*/
 	async displayMovieInformation() {
 		const res = await fetch(this.url);
 		const data = await res.json();
@@ -63,9 +78,11 @@ class Modal {
 		let movieTitle = document.createElement('h2');
 		movieTitle.innerHTML = data['original_title'];
 
-		/*
-		score imdb
-		*/
+		let movieDetails = document.createElement('div');
+		movieDetails.setAttribute('class', 'movie-details');
+
+		let movieMainInformation = document.createElement('div');
+		movieMainInformation.setAttribute('class', 'movie-main-information');
 
 		let movieDate = document.createElement('p');
 		movieDate.innerHTML = data['year'];
@@ -89,28 +106,32 @@ class Modal {
 		movieCountries.innerHTML = `Pays: ${data['countries'].join(', ')}`;
 
 		let movieBoxOffice = document.createElement('p');
-		movieBoxOffice.innerHTML = `Résultat au Box Office: ${this.convertIntoCurrency(data['worldwide_gross_income'])}`;
+		movieBoxOffice.innerHTML = this.convertIntoCurrency(data['worldwide_gross_income']);
 
-		let movieRated = document.createElement('p')
-		movieRated.innerHTML = 	`Rated: ${data['rated'] === "Not rated or unkown rating" ? "Non communiqué ou inexistant" : data['rated']}`;
+		let movieRated = document.createElement('p');
+		movieRated.innerHTML = 	`${data['rated'] === "Not rated or unkown rating" || data['rated'] === "0" ? "" : "Rated: " + data['rated']}`;
 
 		let movieImdbScore = document.createElement('p')
-		movieImdbScore.innerHTML = 	`Note Imdb: ${data['imdb_score']}`;
+		movieImdbScore.innerHTML = 	`IMDb: ${data['imdb_score']}`;
 
 		let moviePicture = document.querySelector("#movie-picture");
 		moviePicture.setAttribute('src', data["image_url"]);
 
+		movieDetails.appendChild(movieImdbScore);
+		movieDetails.appendChild(movieDuration);
+		movieDetails.appendChild(movieDate);
+		movieDetails.appendChild(movieRated);
+
+		movieMainInformation.appendChild(movieDescription);
+		movieMainInformation.appendChild(movieDirector);
+		movieMainInformation.appendChild(movieActors);
+		movieMainInformation.appendChild(movieGenres);
+		movieMainInformation.appendChild(movieCountries);
+		movieMainInformation.appendChild(movieBoxOffice);
+
 		movieInformation.appendChild(movieTitle);
-		movieInformation.appendChild(movieDate);
-		movieInformation.appendChild(movieDuration);
-		movieInformation.appendChild(movieDescription);
-		movieInformation.appendChild(movieDirector);
-		movieInformation.appendChild(movieActors);
-		movieInformation.appendChild(movieGenres);
-		movieInformation.appendChild(movieCountries);
-		movieInformation.appendChild(movieBoxOffice);
-		movieInformation.appendChild(movieRated);
-		movieInformation.appendChild(movieImdbScore);
+		movieInformation.appendChild(movieDetails);
+		movieInformation.appendChild(movieMainInformation);
 	}
 
 	deleteMovieInformation() {
@@ -121,12 +142,22 @@ class Modal {
 		moviePicture[0].setAttribute('src', '');
 	}
 
+	/*
+	* Converts minutes into format h:mm
+	* @param {number} duration - duration from current movie
+	* @returns {string}
+	*/
 	durationCalculation(duration) {
 		let m = duration % 60;
 		let h = (duration - m) / 60;
-		return `${h}H${(m < 10 ? "0"+m : m)}`;
+		return `${h}h${(m < 10 ? "0" + m : m)}`;
 	}
 
+	/*
+	* Converts number into USD currency
+	* @param {number} income - income from current movie
+	* @returns {string}
+	*/
 	convertIntoCurrency(income) {
 		let formatter = new Intl.NumberFormat('fr-FR', {
 			style: 'currency',
@@ -134,6 +165,6 @@ class Modal {
 			maximumFractionDigits: 0,
 		});
 
-		return income !== null ? formatter.format(income) : "Non communiqué";
+		return income !== null ? `Résultat au Box Office: ${formatter.format(income)}` : "";
 	}
 }
